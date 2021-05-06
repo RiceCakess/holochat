@@ -79,7 +79,7 @@ export const fetchParser = (json: any) => {
 				if (chatMessage) {
 					try {
 						let snippet: YtcMessageSnippet | undefined;
-						if (paidMessageRenderer) {
+						/*if (paidMessageRenderer) {
 							const superChat: YtcMessageSuperChat = {
 								type: "superChatEvent",
 								superChatDetails: {
@@ -112,15 +112,18 @@ export const fetchParser = (json: any) => {
 							};
 							snippet = newSponsor;
 						}
-						else if (textRenderer) {
-							const message = toMessage(textRenderer.message);
+						else */
+						if (textRenderer) {
+							const message = textRenderer.message;
 							const textMessage: YtcMessageTextMessage = {
 								type: "textMessageEvent",
-								displayMessage: message,
-								textMessageDetails: {
-									messageText: message,
-								},
-								publishedAt: convertTimestampUsec(chatMessage.timestampUsec),
+								message,
+								// displayMessage: message,
+								// textMessageDetails: {
+								// 	messageText: message,
+								// },
+								// publishedAt: convertTimestampUsec(chatMessage.timestampUsec),
+								timestamp: Number(chatMessage.timestampUsec),
 							};
 							snippet = textMessage;
 						}
@@ -203,17 +206,18 @@ export interface YtcMessage {
 }
 
 export interface YtcMessageSnippetBase {
-	publishedAt: string;
+	// publishedAt: String;
 }
 
 type YtcMessageSnippet = YtcMessageTextMessage | YtcMessageSuperChat | YtcMessageSuperSticker | YtcMessageNewSponsor;
 
 export interface YtcMessageTextMessage extends YtcMessageSnippetBase {
 	type: "textMessageEvent";
-	displayMessage: string;
-	textMessageDetails: {
-		messageText: string;
-	};
+	message: LiveChatSimpleString;
+	// textMessageDetails: {
+	// 	messageText: LiveChatSimpleString;
+	// };
+	timestamp?: Number;
 }
 
 export interface YtcMessageSuperChat extends YtcMessageSnippetBase {
